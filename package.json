@@ -1,0 +1,40 @@
+{
+  "name": "twing-render-loader",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/Tarik02/twing-render-loader#readme",
+  "bugs": {
+    "url": "https://github.com/Tarik02/twing-render-loader/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarik02/twing-render-loader.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepack": "yarn build"
+  },
+  "devDependencies": {
+    "@types/md5": "^2.3.2",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0"
+  },
+  "peerDependencies": {
+    "webpack": "^5"
+  },
+  "dependencies": {
+    "lru-cache": "^7",
+    "md5": "^2",
+    "twing": "^5"
+  }
+}
