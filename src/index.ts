@@ -148,8 +148,11 @@ export default async function (this: Webpack.LoaderContext<Options>, source: str
 
     await environmentModule?.configure?.call(
       this,
-      env,
-      options.environmentParams ?? {}
+      {
+        loader: this,
+        env,
+        params: options.environmentParams ?? {}
+      }
     );
 
     env.setLoader(new TwingLoaderChain([

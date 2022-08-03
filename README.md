@@ -46,10 +46,10 @@ export const options = {
 };
 
 /**
- * @this {import('webpack').LoaderContext<{}>}
+ * @param {import('webpack').LoaderContext<{}>} loader
  * @param {import('twing').TwingEnvironment} env
  */
-export async function configure(env, params) {
-    env.addGlobal('mode', this.mode);
+export async function configure({ loader, env }) {
+    env.addGlobal('mode', loader.mode);
 };
 ```
