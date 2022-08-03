@@ -1,5 +1,9 @@
 # twing-render-loader
 
+![Check](https://github.com/Tarik02/twing-render-loader/actions/workflows/check.yml/badge.svg)
+![Publish to NPM](https://github.com/Tarik02/twing-render-loader/actions/workflows/publish-to-npm.yml/badge.svg)
+[![npm version](https://badge.fury.io/js/twing-render-loader.svg)](https://badge.fury.io/js/twing-render-loader)
+
 ## Installation
 
 ```bash
