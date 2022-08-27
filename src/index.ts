@@ -1,7 +1,5 @@
 import * as Path from 'path';
 import * as Webpack from 'webpack';
-import md5 from 'md5';
-import LRU from 'lru-cache';
 import {
   TwingEnvironment,
   TwingLoaderFilesystem,
@@ -9,7 +7,6 @@ import {
   TwingLoaderChain,
   TwingSource,
   TwingError,
-  TwingCacheInterface,
   TwingLoaderInterface,
   TwingLoaderRelativeFilesystem
 } from 'twing';
@@ -76,32 +73,6 @@ export type Options = {
   environmentParams?: undefined | Record<string, any>;
 };
 
-const cacheData = new LRU<string, { timestamp: number, data: string }>({
-  max: 1000,
-});
-const cache: TwingCacheInterface = {
-  generateKey: async (name, className) => {
-    return md5(className);
-  },
-  load: async key => {
-    const item = cacheData.get(key);
-    if (item) {
-      const module = { exports: () => new Map() };
-      eval(item.data);
-      return module.exports;
-    } else {
-      return () => new Map();
-    }
-  },
-  write: async (key, content) => {
-    cacheData.set(key, {
-      timestamp: Date.now(),
-      data: content,
-    });
-  },
-  getTimestamp: async key => cacheData.get(key)?.timestamp ?? 0
-};
-
 export default async function (this: Webpack.LoaderContext<Options>, source: string) {
   this.cacheable && this.cacheable(true);
 
@@ -144,7 +115,6 @@ export default async function (this: Webpack.LoaderContext<Options>, source: str
     const env = new TwingEnvironment(new TwingLoaderChain([
       new TwingLoaderFilesystem([context], context),
     ]), environmentModule?.options);
-    env.setCache(cache);
 
     await environmentModule?.configure?.call(
       this,

@@ -25,7 +25,6 @@
     "prepack": "yarn build"
   },
   "devDependencies": {
-    "@types/md5": "^2.3.2",
     "typescript": "^4.7.4",
     "webpack": "^5.74.0"
   },
@@ -33,8 +32,6 @@
     "webpack": "^5"
   },
   "dependencies": {
-    "lru-cache": "^7",
-    "md5": "^2",
     "twing": "^5"
   }
 }
