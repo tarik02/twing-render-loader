@@ -74,7 +74,7 @@ export type Options = {
 };
 
 export default async function (this: Webpack.LoaderContext<Options>, source: string) {
-  this.cacheable && this.cacheable(true);
+  this.cacheable && this.cacheable(false);
 
   const callback = this.async();
 
@@ -139,6 +139,7 @@ export default async function (this: Webpack.LoaderContext<Options>, source: str
 
       try {
         const sourceContext = await env.getLoader().getSourceContext(name, from);
+
         this.addDependency(sourceContext.getResolvedName());
       } catch {
         for (const loc of resolvePotentialDependencyLocations(name, from, env.getLoader())) {
