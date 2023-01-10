@@ -11,8 +11,57 @@ import {
   TwingLoaderRelativeFilesystem
 } from 'twing';
 
-class PathSupportingArrayLoader extends TwingLoaderArray {
+class PathSupportingLoaderChain extends TwingLoaderChain {
   getSourceContext(name: string, from: TwingSource): Promise<TwingSource> {
+    return super.getSourceContext(name, from).then((source) => {
+      return new TwingSource(source.getCode(), source.getName(), name);
+    });
+  }
+}
+
+class PathSupportingArrayLoader extends TwingLoaderArray {
+  async resolve(name: string, from: TwingSource): Promise<string> {
+    // console.log();
+    // console.log();
+    // console.log(name, from?.getName());
+    // console.log();
+
+    try {
+      const result = await super.resolve(name, from)
+
+      console.log();
+      console.log('resolve', name, from?.getName(), result);
+
+      return result;
+    } catch (e) {
+      console.log();
+      console.log('resolve', name, from?.getName(), e);
+
+      throw e;
+    }
+  }
+
+  async exists(name: string, from: TwingSource): Promise<boolean> {
+    try {
+      const result = await super.exists(name, from)
+
+      // console.log();
+      // console.log('exists', name, from?.getName(), result);
+
+      return result;
+    } catch (e) {
+      // console.log();
+      // console.log('exists', name, from?.getName(), e);
+
+      throw e;
+    }
+  }
+
+  // getCacheKey
+
+  getSourceContext(name: string, from: TwingSource): Promise<TwingSource> {
+    console.log('getSourceContext', name, from);
+
     return super.getSourceContext(name, from).then((source) => {
       return new TwingSource(source.getCode(), source.getName(), name);
     });
@@ -125,12 +174,27 @@ export default async function (this: Webpack.LoaderContext<Options>, source: str
       }
     );
 
-    env.setLoader(new TwingLoaderChain([
-      new PathSupportingArrayLoader(new Map([
-        [resourcePath, source]
-      ])),
-      env.getLoader(),
-    ]));
+    // env.setLoader(
+    //   new PathSupportingLoaderChain(
+    //     [
+    //       new PathSupportingArrayLoader(new Map([
+    //         [resourcePath, source]
+    //       ])),
+    //       env.getLoader(),
+    //     ]
+    //   )
+    // );
+
+    env.setLoader(
+      new TwingLoaderChain(
+        [
+          new TwingLoaderArray(new Map([
+            [resourcePath, source]
+          ])),
+          env.getLoader(),
+        ]
+      )
+    );
 
     env.on('template', async (name: string, from?: TwingSource) => {
       if (!from) {
@@ -162,6 +226,7 @@ export default async function (this: Webpack.LoaderContext<Options>, source: str
 
     callback(null, result);
   } catch (error) {
-    callback(castError(error));
+    // callback(castError(error));
+    callback(error);
   }
 };
