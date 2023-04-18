@@ -74,7 +74,7 @@ export type Options = {
 };
 
 export default async function (this: Webpack.LoaderContext<Options>, source: string) {
-  this.cacheable && this.cacheable(false);
+  this.cacheable && this.cacheable(true);
 
   const callback = this.async();
 
